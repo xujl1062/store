@@ -29,6 +29,20 @@ func NewStore(uri string, logger *log.Logger) (store.Store, error) {
 	}, nil
 }
 
+func (db db) Get(ctx context.Context, key string, criteria map[string]string, out interface{}) (err error) {
+	c, err := parsingKey(db.client, key)
+	if err != nil {
+		return InvalidKeyError
+	}
+	ctx, cancel := context.WithTimeout(ctx, time.Second*5)
+	defer cancel()
+	rv := reflect.ValueOf(out)
+	if rv.Kind() != reflect.Ptr || rv.IsNil() {
+		return &InvalidPtrError{reflect.TypeOf(out)}
+	}
+	return c.FindOne(ctx, criteria).Decode(out)
+}
+
 func (db db) Save(ctx context.Context, key string, entity interface{}) error {
 	c, err := parsingKey(db.client, key)
 	if err != nil {
@@ -60,7 +74,7 @@ func (db db) List(ctx context.Context, key string, criteria map[string]string, t
 	defer cur.Close(context.Background())
 	list := make([]interface{}, 0)
 	for cur.Next(context.Background()) {
-		v := reflect.New(reflect.TypeOf(target).Elem()).Interface()
+		v := reflect.New(reflect.TypeOf(target)).Interface()
 		err := cur.Decode(v)
 		if err != nil {
 			return nil, err
