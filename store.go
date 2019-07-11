@@ -3,10 +3,10 @@ package store
 import "context"
 
 type Store interface {
-	Get(ctx context.Context, key string, criteria map[string]string, out interface{}) error
+	Get(ctx context.Context, key string, criteria map[string]interface{}, out interface{}) error
 	Save(ctx context.Context, key string, entity interface{}) error
-	List(ctx context.Context, key string, criteria map[string]string, target interface{}) ([]interface{}, error)
-	Update(ctx context.Context, key string, criteria map[string]string, entity interface{}) error
+	List(ctx context.Context, key string, criteria map[string]interface{}, target interface{}) ([]interface{}, error)
+	Update(ctx context.Context, key string, criteria map[string]interface{}, entity interface{}) error
 }
 
 type ExtOptions struct {

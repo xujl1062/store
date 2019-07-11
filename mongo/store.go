@@ -29,7 +29,7 @@ func NewStore(uri string, logger *log.Logger) (store.Store, error) {
 	}, nil
 }
 
-func (db db) Get(ctx context.Context, key string, criteria map[string]string, out interface{}) (err error) {
+func (db db) Get(ctx context.Context, key string, criteria map[string]interface{}, out interface{}) (err error) {
 	c, err := parsingKey(db.client, key)
 	if err != nil {
 		return InvalidKeyError
@@ -57,7 +57,7 @@ func (db db) Save(ctx context.Context, key string, entity interface{}) error {
 	return nil
 }
 
-func (db db) List(ctx context.Context, key string, criteria map[string]string, target interface{}) ([]interface{}, error) {
+func (db db) List(ctx context.Context, key string, criteria map[string]interface{}, target interface{}) ([]interface{}, error) {
 	c, err := parsingKey(db.client, key)
 	if err != nil {
 		return nil, err
@@ -84,7 +84,7 @@ func (db db) List(ctx context.Context, key string, criteria map[string]string, t
 	return list, nil
 }
 
-func (db db) Update(ctx context.Context, key string, criteria map[string]string, entity interface{}) error {
+func (db db) Update(ctx context.Context, key string, criteria map[string]interface{}, entity interface{}) error {
 	c, err := parsingKey(db.client, key)
 	if err != nil {
 		return err

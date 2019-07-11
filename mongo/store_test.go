@@ -28,7 +28,7 @@ func TestDb(t *testing.T) {
 		}
 		t.Run("Then get", func(t *testing.T) {
 			out := &map[string]string{}
-			err := s.Get(context.Background(), "test/col", map[string]string{"_id": "1"}, out)
+			err := s.Get(context.Background(), "test/col", map[string]interface{}{"_id": "1"}, out)
 			if err != nil {
 				t.Fatalf("Failed to get the obj , cause %s", err.Error())
 			}
