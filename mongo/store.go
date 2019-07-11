@@ -74,7 +74,7 @@ func (db db) List(ctx context.Context, key string, criteria map[string]string, t
 	defer cur.Close(context.Background())
 	list := make([]interface{}, 0)
 	for cur.Next(context.Background()) {
-		v := reflect.New(reflect.TypeOf(target)).Interface()
+		v := reflect.New(reflect.TypeOf(target).Elem()).Interface()
 		err := cur.Decode(v)
 		if err != nil {
 			return nil, err
