@@ -7,6 +7,7 @@ type Store interface {
 	Save(ctx context.Context, key string, entity interface{}) error
 	List(ctx context.Context, key string, criteria map[string]interface{}, target interface{}) ([]interface{}, error)
 	Update(ctx context.Context, key string, criteria map[string]interface{}, entity interface{}) error
+	FindAndUpdate(ctx context.Context, key string, criteria map[string]interface{}, out interface{}) error
 }
 
 type ExtOptions struct {

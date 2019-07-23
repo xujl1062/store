@@ -98,6 +98,29 @@ func (db db) Update(ctx context.Context, key string, criteria map[string]interfa
 	return nil
 }
 
+func (db db) FindAndUpdate(ctx context.Context, key string, criteria map[string]interface{}, update interface{}) error {
+	c, err := parsingKey(db.client, key)
+	if err != nil {
+		return err
+	}
+
+	rv := reflect.ValueOf(update)
+	if reflect.Ptr != rv.Kind() || rv.IsNil() {
+		return errors.New("Param target must be ptr")
+	}
+
+	result := c.FindOneAndUpdate(ctx, criteria, update)
+	if result.Err() != nil {
+		return result.Err()
+	}
+
+	if err := result.Decode(update); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func parsingKey(client *mongo.Client, key string) (*mongo.Collection, error) {
 	paths := strings.Split(key, "/")
 	if len(paths) != 2 {
